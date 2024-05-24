@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom';
-
+import userEvent from "@testing-library/user-event";
 import App from "../App";
 
 // Portfolio Elements
@@ -21,7 +21,7 @@ test("displays an image of yourself", () => {
 
   const image = screen.getByAltText("My profile pic");
 
-  expect(image).toHaveAttribute("src", "https://via.placeholder.com/350");
+  expect(image).toHaveAttribute("src", "src/gladoo.jpeg");
 });
 
 test("displays second-level heading with the text `About Me`", () => {
@@ -66,15 +66,44 @@ test("displays the correct links", () => {
 
 // Newsletter Form - Initial State
 test("the form includes text inputs for name and email address", () => {
-  // your test code here
+  
+})
+//contacts
+test("the page shows information the user types into the contact form field", () => {
+  render(<App />);
+  expect(screen.getByPlaceholderText(/your name/i)).toBeInTheDocument()
+  expect(screen.getByPlaceholderText(/your email address/i)).toBeInTheDocument()
 });
+ test("the page shows information the user types into the contact form field",()=>{
+  render(<App/>)
+  const contactName = screen.getAllByLabelText(/your name/i);
+  const contactEmail = screen.getAllByLabelText(/your email/i);
 
+  userEvent.type(contactName,"Joy");
+  userEvent.type(contactEmail,"joy@example.com");
+
+  expect(contactName).toHaveValue("Joy")
+  expect(contactEmail).toHaveValue("joy@example,com");
+ })
+  
+
+ //checkboxes.
 test("the form includes three checkboxes to select areas of interest", () => {
-  // your test code here
+  render(<App />);
+  expect(screen.getByLabelText(/frontend development/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/backend development/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/mobile development/i)).toBeInTheDocument();
 });
 
 test("the checkboxes are initially unchecked", () => {
-  // your test code here
+  render(<App />);
+  const frontendCheckbox = screen.getByLabelText(/frontend development/i);
+  const backendCheckbox = screen.getByLabelText(/backend development/i);
+  const mobileCheckbox = screen.getByLabelText(/mobile development/i);
+
+  expect(frontendCheckbox).not.toBeChecked();
+  expect(backendCheckbox).not.toBeChecked();
+  expect(mobileCheckbox).not.toBeChecked();
 });
 
 // Newsletter Form - Adding Responses
